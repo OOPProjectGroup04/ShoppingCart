@@ -20,18 +20,45 @@ class LoginView extends JFrame {
     JButton loginButton = new JButton("Login");
     JButton resetButton = new JButton("Reset");
     JLabel messageLabel = new JLabel();
+    JLabel titleLabel;
+    JRadioButton sellerRadioButton;
+    JRadioButton customerRadioButton;
+    ButtonGroup roleButtonGroup;
 
     public LoginView() {
+        
         // Setup GUI components
         // Set the frame properties
         setTitle("Login Form");
         setBounds(10, 10, 370, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-
         // Set the container and layout manager
         Container container = getContentPane();
         container.setLayout(null);
+
+        // Create and place the title label
+        titleLabel = new JLabel("George's Shopping Cart App", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        titleLabel.setBounds(50, 30, 270, 30);
+        container.add(titleLabel);
+
+        //Select either Seller or Customer
+        sellerRadioButton = new JRadioButton("Seller");
+        customerRadioButton = new JRadioButton("Customer");
+        sellerRadioButton.setBounds(150, 270, 80, 30);
+        customerRadioButton.setBounds(230, 270, 100, 30);
+        
+        // Group the radio buttons
+        roleButtonGroup = new ButtonGroup();
+        roleButtonGroup.add(sellerRadioButton);
+        roleButtonGroup.add(customerRadioButton);
+        
+        container.add(sellerRadioButton);
+        container.add(customerRadioButton);
+
+        // Preselect the "Customer" radio button
+        customerRadioButton.setSelected(true);
 
         // Create and place the username label
         userLabel = new JLabel("Username");
