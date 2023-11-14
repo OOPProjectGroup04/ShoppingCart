@@ -14,7 +14,6 @@ public class Product {
         this.quantity = quantity;
         this.imageURL = imageURL;
         this.description = description;
-
     }
 
     public int getProductID(){
