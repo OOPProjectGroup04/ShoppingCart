@@ -11,14 +11,19 @@ import java.util.List;
 class UserModel {
     private List<ChangeListener> listeners = new ArrayList<>();
     private boolean authenticated;
+    private String role;
 
-    public void authenticate(String username, String password) {
+    public void authenticate(String username, String password, String role) {
         boolean oldAuthenticated = this.authenticated;
         this.authenticated = "admin".equalsIgnoreCase(username) && "12345".equalsIgnoreCase(password);
+        if (this.authenticated) {
+            this.role = role;
+        }
         if (oldAuthenticated != this.authenticated) {
             notifyListeners();
         }
     }
+
 
     public boolean isAuthenticated() {
         return authenticated;
@@ -34,6 +39,11 @@ class UserModel {
             listener.stateChanged(event);
         }
     }
+
+    public String getRole() {
+        return role;
+    }
+
 }
 
 // LoginView (View)
@@ -134,6 +144,15 @@ class LoginView extends JFrame {
     passwordField.setText("");
 }
 
+    public String getRole() {
+        if (sellerRadioButton.isSelected()) {
+            return "Seller";
+        } else if (customerRadioButton.isSelected()) {
+            return "Customer";
+        } else {
+            return null;
+        }
+    }
 }
 
 // LoginController (Controller)
@@ -149,20 +168,41 @@ class LoginController implements ActionListener, ChangeListener {
     }
 
     @Override
-public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == view.getLoginButton()) {
-        String username = view.getUsername();
-        String password = view.getPassword();
-        model.authenticate(username, password);
-    } else if (e.getSource() == view.getResetButton()) {
-        view.resetFields();
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == view.getLoginButton()) {
+            String username = view.getUsername();
+            String password = view.getPassword();
+            String role = view.getRole(); // Get the selected role from the view
+            model.authenticate(username, password, role);
+        } else if (e.getSource() == view.getResetButton()) {
+            view.resetFields();
+        }
     }
-}
 
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        view.updateLoginStatus(model.isAuthenticated());
+        boolean isAuthenticated = model.isAuthenticated();
+        view.updateLoginStatus(isAuthenticated);
+
+        if (isAuthenticated) {
+            String role = model.getRole();
+            if ("Customer".equals(role)) {
+                // Redirect to customer homepage
+            } else if ("Seller".equals(role)) {
+                // Redirect to seller dashboard
+                showSellerDashboard();
+            }
+        }
+    }
+
+    private void showSellerDashboard() {
+        SwingUtilities.invokeLater(() -> {
+            SellerModel sellerModel = new SellerModel();
+            SellerView sellerView = new SellerView();
+            SellerController sellerController = new SellerController(sellerModel, sellerView);
+            sellerView.display();
+        });
     }
 }
 

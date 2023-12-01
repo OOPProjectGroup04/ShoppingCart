@@ -97,7 +97,7 @@ class SellerView {
     }
 }
 
-// Controller
+// SellerController (Controller)
 class SellerController {
     private SellerModel model;
     private SellerView view;
@@ -150,7 +150,13 @@ class SellerController {
     private void handleAddNewItem() {
         // Logic for adding new item
     }
+
+    // Add a method to display the SellerDashboard
+    public void displaySellerDashboard() {
+        view.display();
+    }
 }
+
 
 // Main class to run the application
 class Main {
