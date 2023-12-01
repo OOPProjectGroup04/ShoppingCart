@@ -41,6 +41,7 @@ import java.awt.Image;
         }
     }
 }
+/* 
  class ProductCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -78,3 +79,4 @@ import java.awt.Image;
         return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }
 }
+*/
