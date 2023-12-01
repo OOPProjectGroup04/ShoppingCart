@@ -5,7 +5,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 
-
+/*This class is purely for testing and debugging images */
 public class ImageTester {
 
     JFrame frame;
