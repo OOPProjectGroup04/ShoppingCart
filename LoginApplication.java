@@ -159,10 +159,12 @@ class LoginView extends JFrame {
 class LoginController implements ActionListener, ChangeListener {
     private UserModel model;
     private LoginView view;
+    private CatalogView catalogView;
 
-    public LoginController(UserModel model, LoginView view) {
+    public LoginController(UserModel model, LoginView view, CatalogView catalogView) {
         this.model = model;
         this.view = view;
+        this.catalogView = catalogView;
         this.view.attachController(this);
         this.model.addChangeListener(this);
     }
@@ -189,6 +191,7 @@ class LoginController implements ActionListener, ChangeListener {
             String role = model.getRole();
             if ("Customer".equals(role)) {
                 // Redirect to customer homepage
+                catalogView.displayCustomerHomepage();
             } else if ("Seller".equals(role)) {
                 // Redirect to seller dashboard
                 showSellerDashboard();
@@ -212,7 +215,8 @@ public class LoginApplication {
         SwingUtilities.invokeLater(() -> {
             UserModel model = new UserModel();
             LoginView view = new LoginView();
-            new LoginController(model, view);
+            CatalogView catalogView = new CatalogView();  // Create an instance of CatalogView
+            new LoginController(model, view, catalogView);  // Pass catalogView to the constructor
             view.setVisible(true);
         });
     }

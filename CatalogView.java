@@ -130,10 +130,19 @@ class CatalogView {
         ShoppingCartView cartView = new ShoppingCartView(shoppingCart);
         cartView.displayCartItems();
     }
+
+    public void displayCustomerHomepage() {
+        SwingUtilities.invokeLater(() -> {
+            CatalogMain catalogMain = new CatalogMain();
+            catalogMain.display();
+        });
+    }
+
     public void refreshCartDisplay() {
         cartItemCountLabel.setText("Cart: " + shoppingCart.size() + " items");
         // Any other UI updates related to the cart
     }
+
 
 }
 class ProductCatalogController {
@@ -157,10 +166,17 @@ class ProductCatalogController {
 
     // Additional methods for handling user actions
 }
+// CatalogMain (Main class for customer homepage)
 class CatalogMain {
-    public static void main(String[] args) {
-        CatalogView view = new CatalogView();
+    private CatalogView view;
+
+    public CatalogMain() {
+        this.view = new CatalogView();
         new ProductCatalogController(view);
+    }
+
+    public void display() {
         view.setVisible(true);
     }
 }
+
