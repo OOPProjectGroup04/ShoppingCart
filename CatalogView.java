@@ -39,6 +39,7 @@ class CatalogView {
 
     
     }
+    
 
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
@@ -112,6 +113,10 @@ class CatalogView {
         updateCartDisplay();
         JOptionPane.showMessageDialog(frame, product.getName() + " added to cart!");
     }
+    public void clearShoppingCart() {
+        shoppingCart.clear();
+        updateCartDisplay();
+    }
     
     private void updateCartDisplay() {
         cartItemCountLabel.setText("Cart: " + shoppingCart.size() + " items");
@@ -125,42 +130,9 @@ class CatalogView {
         ShoppingCartView cartView = new ShoppingCartView(shoppingCart);
         cartView.displayCartItems();
     }
-
-}
-class ShoppingCartView {
-    private List<Product> shoppingCart;
-
-    public ShoppingCartView(List<Product> shoppingCart) {
-        this.shoppingCart = shoppingCart;
-    }
-
-     public void displayCartItems() {
-        JDialog cartDialog = new JDialog(); 
-        cartDialog.setTitle("Shopping Cart");
-        cartDialog.setLayout(new BorderLayout());
-        
-        StringBuilder sb = new StringBuilder("<html>");
-        for (Product product : shoppingCart) {
-            sb.append(product.getName()).append(" - $").append(product.getPrice()).append("<br>");
-        }
-        sb.append("</html>");
-        
-        JLabel itemsLabel = new JLabel(sb.toString());
-        JScrollPane scrollPane = new JScrollPane(itemsLabel); // In case of many items
-        
-        // Checkout button at the bottom of the dialog
-        JButton checkoutButton = new JButton("Checkout");
-        checkoutButton.addActionListener(e -> {
-            // Placeholder for checkout functionality
-            JOptionPane.showMessageDialog(cartDialog, "Proceeding to Checkout...");
-        });
-
-        cartDialog.add(scrollPane, BorderLayout.CENTER);
-        cartDialog.add(checkoutButton, BorderLayout.SOUTH);
-        
-        cartDialog.setSize(300, 400); 
-        cartDialog.setLocationRelativeTo(null); // Center the dialog
-        cartDialog.setVisible(true);
+    public void refreshCartDisplay() {
+        cartItemCountLabel.setText("Cart: " + shoppingCart.size() + " items");
+        // Any other UI updates related to the cart
     }
 
 }
