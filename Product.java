@@ -18,7 +18,7 @@ public class Product {
         this.imageURL = imageURL;
         this.description = description;
     }
-
+   
     public int getProductID(){
         return productID;
     }
@@ -52,7 +52,7 @@ public class Product {
     }
 
     // Static method to create and return a list of products
-    public static List<Product> getSampleProducts() {
+    public static List<Product> getProducts() {
         List<Product> products = new ArrayList<>();
         products.add(new Product(101, "Laptop", 999.99, 10, "https://m.media-amazon.com/images/I/81zKcC5wJ6L._AC_UF1000,1000_QL80_.jpg", "A high-performance laptop."));
         products.add(new Product(102, "Smartphone", 499.99, 15, "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1692845702708", "An innovative smartphone with the best camera."));
@@ -77,6 +77,17 @@ public class Product {
 
         return products;
     }
+  
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productID=" + productID +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", imageURL='" + imageURL + '\'' +
+                '}';
+    }
 
-List<Product> productList = Product.getSampleProducts();
 }
