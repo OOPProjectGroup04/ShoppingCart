@@ -277,7 +277,7 @@ class LoginController implements ActionListener, ChangeListener {
             showSellerDashboard();
         }
     }
-    
+
     @Override
     public void stateChanged(ChangeEvent e) {
         boolean isAuthenticated = model.isAuthenticated();

@@ -76,6 +76,10 @@ class SellerView {
         frame.add(buttonPanel, BorderLayout.CENTER);
     }
 
+    public JFrame getFrame() {
+        return frame;
+    }
+
     public void display() {
         frame.setVisible(true);
     }
@@ -133,10 +137,59 @@ class SellerController {
                 handleAddNewItem();
             }
         });
+
+        // Initialize model data (for demonstration purposes)
+        model.setTotalSales(500);
+        model.setInventoryCount(50);
     }
 
     private void handleTotalSales() {
         // Logic for total sales
+        // Retrieve data from the model
+        int totalSales = model.getTotalSales();
+        int inventoryCount = model.getInventoryCount();
+
+        // Calculate other metrics
+        double netSales = calculateNetSales(totalSales);
+        double shippingCosts = calculateShippingCosts();
+        double productionCosts = calculateProductionCosts();
+        double sellerFees = calculateSellerFees();
+        double profit = calculateProfit(netSales, shippingCosts, productionCosts, sellerFees);
+
+        // Display the sales metrics in a dialog
+        String message = "Total Sales: " + totalSales + "\n" +
+                "Net Sales: $" + netSales + "\n" +
+                "Shipping Costs: $" + shippingCosts + "\n" +
+                "Production Costs: $" + productionCosts + "\n" +
+                "Seller Fees: $" + sellerFees + "\n" +
+                "Profit: $" + profit;
+
+        JOptionPane.showMessageDialog(view.getFrame(), message, "Total Sales Information", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // Add logic for calculating the sales metrics
+    private double calculateNetSales(int totalSales) {
+        return totalSales * 10; // For demonstration purposes
+    }
+
+    private double calculateShippingCosts() {
+        // Add logic
+        return 200.0; // For demonstration purposes
+    }
+
+    private double calculateProductionCosts() {
+        // Add logic
+        return 3000.0; // For demonstration purposes
+    }
+
+    private double calculateSellerFees() {
+        // Add logic
+        return 500.0; // For demonstration purposes
+    }
+
+    private double calculateProfit(double netSales, double shippingCosts, double productionCosts, double sellerFees) {
+        // Add logic
+        return netSales - (shippingCosts + productionCosts + sellerFees);
     }
 
     private void handleInventory() {
