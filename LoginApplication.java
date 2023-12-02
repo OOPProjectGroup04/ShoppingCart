@@ -13,12 +13,26 @@ class UserModel {
     private boolean authenticated;
     private String role;
 
+
     public void authenticate(String username, String password, String role) {
         boolean oldAuthenticated = this.authenticated;
         this.authenticated = "admin".equalsIgnoreCase(username) && "12345".equalsIgnoreCase(password);
-        if (this.authenticated) {
+
+        // Check if authentication is successful
+        if (authenticated) {
             this.role = role;
+
+            // Check if security question is needed
+            if ("Customer".equals(role)) {
+                setSecurityQuestion("What is your favorite color?", "Blue");
+            } else if ("Seller".equals(role)) {
+                setSecurityQuestion("What is the name of your first pet?", "Fluffy");
+            }
+
+            setSecurityQuestionRequired(true);
         }
+
+        // Notify listeners only if authentication status changes
         if (oldAuthenticated != this.authenticated) {
             notifyListeners();
         }
@@ -44,6 +58,30 @@ class UserModel {
         return role;
     }
 
+    private boolean securityQuestionRequired;
+    private String securityQuestion;
+    private String securityAnswer;
+
+    public void setSecurityQuestion(String question, String answer) {
+        this.securityQuestion = question;
+        this.securityAnswer = answer;
+    }
+
+    public boolean isSecurityQuestionRequired() {
+        return securityQuestionRequired;
+    }
+
+    public void setSecurityQuestionRequired(boolean required) {
+        this.securityQuestionRequired = required;
+    }
+
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public boolean validateSecurityAnswer(String answer) {
+        return securityAnswer.equalsIgnoreCase(answer);
+    }
 }
 
 // LoginView (View)
@@ -160,13 +198,18 @@ class LoginController implements ActionListener, ChangeListener {
     private UserModel model;
     private LoginView view;
     private CatalogView catalogView;
+    private SecurityQuestionView securityQuestionView;
+    private boolean securityQuestionAnswered = false;
+
 
     public LoginController(UserModel model, LoginView view, CatalogView catalogView) {
         this.model = model;
         this.view = view;
         this.catalogView = catalogView;
+        this.securityQuestionView = new SecurityQuestionView(model.getSecurityQuestion());
         this.view.attachController(this);
         this.model.addChangeListener(this);
+        this.securityQuestionView.attachController(this); // Attach the controller to handle the submit button
     }
 
     @Override
@@ -174,28 +217,76 @@ class LoginController implements ActionListener, ChangeListener {
         if (e.getSource() == view.getLoginButton()) {
             String username = view.getUsername();
             String password = view.getPassword();
-            String role = view.getRole(); // Get the selected role from the view
+            String role = view.getRole();
             model.authenticate(username, password, role);
+
+            if (model.isAuthenticated()) {
+                // Check if security question is needed
+                if (model.isSecurityQuestionRequired()) {
+                    showSecurityQuestion();
+                } else {
+                    // Proceed with role-based redirection
+                    handleAuthenticationSuccess();
+                }
+            }
         } else if (e.getSource() == view.getResetButton()) {
             view.resetFields();
+        } else if (e.getSource() == securityQuestionView.getSubmitButton()) {
+            handleSecurityQuestionSubmission();
+        }
+    }
+
+    private void showSecurityQuestion() {
+        // Set the security question text before showing the view
+        securityQuestionView.setSecurityQuestion(model.getSecurityQuestion());
+        securityQuestionView.setVisible(true);
+    }
+
+    private void handleSecurityQuestionSubmission() {
+        String answer = securityQuestionView.getAnswer();
+        if (model.validateSecurityAnswer(answer)) {
+            securityQuestionAnswered = true;
+            securityQuestionView.dispose();  // Close the security question dialog
+            redirectToRoleHomepage(model.getRole());
+        } else {
+            securityQuestionView.dispose();  // Close the security question dialog
+            view.displayErrorMessage("Incorrect answer to the security question. Authentication failed.");
         }
     }
 
 
+    private void handleAuthenticationSuccess() {
+        String role = model.getRole();
+        if ("Customer".equals(role) || "Seller".equals(role)) {
+            // Display security question and wait for submission
+            showSecurityQuestion();
+        } else {
+            // Handle other roles or scenarios
+            redirectToRoleHomepage(role);
+        }
+    }
+
+    private void redirectToRoleHomepage(String role) {
+        securityQuestionView.dispose();  // Close the security question dialog
+
+        if ("Customer".equals(role)) {
+            // Redirect to customer homepage
+            catalogView.displayCustomerHomepage();
+        } else if ("Seller".equals(role)) {
+            // Redirect to seller dashboard
+            showSellerDashboard();
+        }
+    }
+    
     @Override
     public void stateChanged(ChangeEvent e) {
         boolean isAuthenticated = model.isAuthenticated();
         view.updateLoginStatus(isAuthenticated);
 
-        if (isAuthenticated) {
+        if (isAuthenticated && securityQuestionAnswered) {
             String role = model.getRole();
-            if ("Customer".equals(role)) {
-                // Redirect to customer homepage
-                catalogView.displayCustomerHomepage();
-            } else if ("Seller".equals(role)) {
-                // Redirect to seller dashboard
-                showSellerDashboard();
-            }
+            redirectToRoleHomepage(role);
+            securityQuestionAnswered = false;  // Reset the flag for future logins
         }
     }
 
