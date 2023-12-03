@@ -34,7 +34,6 @@ class SellerView {
     private JFrame frame;
     private JButton btnTotalSales;
     private JButton btnInventory;
-    private JButton btnUpdateInventory;
     private JButton btnAddNewItem;
     private JLabel titleLabel;
 
@@ -92,10 +91,6 @@ class SellerView {
         return btnInventory;
     }
 
-    public JButton getBtnUpdateInventory() {
-        return btnUpdateInventory;
-    }
-
     public JButton getBtnAddNewItem() {
         return btnAddNewItem;
     }
@@ -113,7 +108,8 @@ class InventoryModel {
         return products;
     }
 
-    // Add methods to update products if needed
+    public boolean isInventoryEmpty() {return products.isEmpty();}
+
 }
 
 // InventoryView
@@ -128,6 +124,11 @@ class InventoryView {
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+
+        if (products.isEmpty()) {
+            showMessage("No products are currently available in the inventory.");
+            return; // Don't create other components if the inventory is empty
+        }
 
         inventoryTextArea = new JTextArea();
         inventoryTextArea.setEditable(false);
@@ -165,16 +166,24 @@ class InventoryView {
         return inventoryTextArea;
     }
 
-    public JButton getBtnBack() {
-        return btnBack;
-    }
-
     public void display() {
         frame.setVisible(true);
     }
 
     public JButton getBtnEdit() {
         return btnEdit;
+    }
+
+    public void showEmptyInventoryMessage() {
+        showMessage("No products are currently available in the inventory.");
+    }
+
+    public void showDataRetrievalError() {
+        showMessage("Error fetching inventory data. Please try again later.");
+    }
+
+    private void showMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message, "Inventory Information", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void handleEdit() {
@@ -210,6 +219,11 @@ class InventoryController {
             }
         });
 
+        if (model.isInventoryEmpty()) {
+            view.showEmptyInventoryMessage();
+            return; // Stop further initialization if the inventory is empty
+        }
+
         // Update the inventory text when the view is created
         view.updateInventoryText(model.getProducts());
 
@@ -220,6 +234,10 @@ class InventoryController {
                 handleSelection();
             }
         });
+    }
+
+    public void handleDataRetrievalError() {
+        view.showDataRetrievalError();
     }
 
     private void handleEdit() {
@@ -429,6 +447,13 @@ class SellerController {
         // Get or initialize your list of products
         List<Product> products = Product.getProducts();
 
+        if (products.isEmpty()) {
+            // Use the InventoryView to show the empty inventory message
+            InventoryView inventoryView = new InventoryView(products);
+            inventoryView.showEmptyInventoryMessage();
+            return; // Stop further initialization if the inventory is empty
+        }
+
         // Display the inventory view
         InventoryModel inventoryModel = new InventoryModel(products);
         InventoryView inventoryView = new InventoryView(products);
@@ -439,24 +464,27 @@ class SellerController {
         inventoryView.display();
     }
 
-    private void handleUpdateInventory() {
-        // Logic for updating inventory
-    }
 
     private void handleAddNewItem() {
         // Logic for adding new item
     }
 
     // Add a method to display the SellerDashboard
-    public void displaySellerDashboard() {
-        view.display();
-    }
+    public void displaySellerDashboard() {view.display();}
 }
 
 
 // Main class to run the application
 class Main {
     public static void main(String[] args) {
+        List<Product> products = Product.getProducts();
+
+        if (products.isEmpty()) {
+            // Handle empty inventory condition if needed
+            System.out.println("Empty inventory. Handle accordingly.");
+            return;
+        }
+
         SellerModel model = new SellerModel();
         SellerView view = new SellerView();
         SellerController controller = new SellerController(model, view);
@@ -468,3 +496,4 @@ class Main {
         });
     }
 }
+
