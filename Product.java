@@ -43,12 +43,24 @@ public class Product {
         return imageURL;
     }
 
-    public void updatePrice(double newPrice) {
-        this.price = newPrice;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
-    public void updateQuantity(int newQuantity) {
-        this.quantity = newQuantity;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     // Static method to create and return a list of products

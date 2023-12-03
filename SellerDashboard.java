@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Optional;
 
 // Model
 class SellerModel {
@@ -48,13 +52,11 @@ class SellerView {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
         btnTotalSales = new JButton("Check Total Sales");
-        btnInventory = new JButton("Manage Inventory");
-        btnUpdateInventory = new JButton("Update Inventory");
+        btnInventory = new JButton("View/Edit Inventory");
         btnAddNewItem = new JButton("Add New Item");
 
         buttonPanel.add(btnTotalSales);
         buttonPanel.add(btnInventory);
-        buttonPanel.add(btnUpdateInventory);
         buttonPanel.add(btnAddNewItem);
 
         frame.add(buttonPanel, BorderLayout.CENTER);
@@ -62,14 +64,12 @@ class SellerView {
         // Center align the buttons
         btnTotalSales.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnInventory.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnUpdateInventory.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnAddNewItem.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Add buttons to the button panel with alignment and padding
         buttonPanel.add(Box.createVerticalGlue());
         buttonPanel.add(btnTotalSales);
         buttonPanel.add(btnInventory);
-        buttonPanel.add(btnUpdateInventory);
         buttonPanel.add(btnAddNewItem);
         buttonPanel.add(Box.createVerticalGlue());
 
@@ -101,6 +101,244 @@ class SellerView {
     }
 }
 
+// InventoryModel
+class InventoryModel {
+    private List<Product> products;
+
+    public InventoryModel(List<Product> products) {
+        this.products = products;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    // Add methods to update products if needed
+}
+
+// InventoryView
+class InventoryView {
+    private JFrame frame;
+    private JTextArea inventoryTextArea;
+    private JButton btnBack;
+    private JButton btnEdit;
+
+    public InventoryView(List<Product> products) {
+        frame = new JFrame("View/Edit Inventory");
+        frame.setSize(600, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        inventoryTextArea = new JTextArea();
+        inventoryTextArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(inventoryTextArea);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        btnBack = new JButton("Back to Seller Page");
+        frame.add(btnBack, BorderLayout.SOUTH);
+
+        btnBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle back button click
+                frame.dispose(); // Close the inventory view
+            }
+        });
+
+        btnEdit = new JButton("Edit Selected Item");
+        frame.add(btnEdit, BorderLayout.SOUTH);
+
+        btnEdit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle edit button click
+                handleEdit();
+            }
+        });
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public JTextArea getInventoryTextArea() {
+        return inventoryTextArea;
+    }
+
+    public JButton getBtnBack() {
+        return btnBack;
+    }
+
+    public void display() {
+        frame.setVisible(true);
+    }
+
+    public JButton getBtnEdit() {
+        return btnEdit;
+    }
+
+    private void handleEdit() {
+    }
+
+    public void updateInventoryText(List<Product> products) {
+        StringBuilder inventoryText = new StringBuilder();
+        inventoryText.append(String.format("%-10s %-20s %-15s %-10s\n", "Product ID", "Product Name", "Quantity", "Price"));
+
+        for (Product product : products) {
+            inventoryText.append(String.format("%-10d %-20s %-15d $%-10.2f\n",
+                    product.getProductID(), product.getName(), product.getQuantity(), product.getPrice()));
+        }
+
+        inventoryTextArea.setText(inventoryText.toString());
+    }
+}
+
+// InventoryController
+class InventoryController {
+    private InventoryModel model;
+    private InventoryView view;
+
+    public InventoryController(InventoryModel model, InventoryView view) {
+        this.model = model;
+        this.view = view;
+
+        view.getBtnEdit().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle edit button click
+                handleEdit();
+            }
+        });
+
+        // Update the inventory text when the view is created
+        view.updateInventoryText(model.getProducts());
+
+        // Add a listener to handle the selection of items in the JTextArea
+        view.getInventoryTextArea().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                handleSelection();
+            }
+        });
+    }
+
+    private void handleEdit() {
+        // Check if an item is selected
+        String selectedText = view.getInventoryTextArea().getSelectedText();
+        if (selectedText == null || selectedText.isEmpty()) {
+            JOptionPane.showMessageDialog(view.getFrame(), "Please select an item to edit.",
+                    "Edit Item", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Retrieve the selected item based on the selected text
+        String[] lines = view.getInventoryTextArea().getText().split("\n");
+
+        // Find the index of the selected text in the lines
+        int selectedRow = -1;
+        for (int i = 0; i < lines.length; i++) {
+            if (lines[i].contains(selectedText)) {
+                selectedRow = i;
+                break;
+            }
+        }
+
+        // Check if selectedRow is valid
+        if (selectedRow >= 0 && selectedRow < lines.length) {
+            String selectedLine = lines[selectedRow];
+            int selectedProductId = Integer.parseInt(selectedLine.split("\\s+")[0]);
+
+            // Find the corresponding product based on the selected product ID
+            Optional<Product> selectedProduct = model.getProducts().stream()
+                    .filter(product -> product.getProductID() == selectedProductId)
+                    .findFirst();
+
+            if (selectedProduct.isPresent()) {
+                // Perform editing logic (e.g., open a dialog for editing)
+                handleEditProduct(selectedProduct.get());
+            }
+        } else {
+            // Handle the case where selectedRow is invalid
+            JOptionPane.showMessageDialog(view.getFrame(), "Invalid selection. Please try again.",
+                    "Edit Item", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Add a method to handle the selection of items in the JTextArea
+    private void handleSelection() {
+        // You can add logic to handle selection if needed
+    }
+
+    private void handleEditProduct(Product product) {
+        // Create a dialog for editing
+        JDialog editDialog = new JDialog(view.getFrame(), "Edit Product", true);
+        editDialog.setSize(400, 300);
+        editDialog.setLayout(new GridLayout(6, 2));
+
+        // Create labels and text fields for each property
+        JLabel idLabel = new JLabel("Product ID:");
+        JTextField idField = new JTextField(String.valueOf(product.getProductID())); // Display current ID
+        JLabel nameLabel = new JLabel("Product Name:");
+        JTextField nameField = new JTextField(product.getName());
+        JLabel descriptionLabel = new JLabel("Description:");
+        JTextField descriptionField = new JTextField(product.getDescription());
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField(String.valueOf(product.getPrice()));
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JTextField quantityField = new JTextField(String.valueOf(product.getQuantity()));
+
+        // Create buttons for saving changes and canceling
+        JButton saveButton = new JButton("Save Changes");
+        JButton cancelButton = new JButton("Cancel");
+
+        // Add action listener to the save button
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Update the selected product with the new values
+                product.setProductID(Integer.parseInt(idField.getText())); // Update ID
+                product.setName(nameField.getText());
+                product.setDescription(descriptionField.getText());
+                product.setPrice(Double.parseDouble(priceField.getText()));
+                product.setQuantity(Integer.parseInt(quantityField.getText()));
+
+                // Update the display in the inventory view
+                view.updateInventoryText(model.getProducts());
+
+                // Close the dialog
+                editDialog.dispose();
+            }
+        });
+
+        // Add action listener to the cancel button
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Close the dialog without saving changes
+                editDialog.dispose();
+            }
+        });
+
+        // Add components to the dialog
+        editDialog.add(idLabel);
+        editDialog.add(idField);
+        editDialog.add(nameLabel);
+        editDialog.add(nameField);
+        editDialog.add(descriptionLabel);
+        editDialog.add(descriptionField);
+        editDialog.add(priceLabel);
+        editDialog.add(priceField);
+        editDialog.add(quantityLabel);
+        editDialog.add(quantityField);
+        editDialog.add(saveButton);
+        editDialog.add(cancelButton);
+
+        // Set the layout and make the dialog visible
+        editDialog.setLayout(new GridLayout(6, 2));
+        editDialog.setVisible(true);
+    }
+}
+
 // SellerController (Controller)
 class SellerController {
     private SellerModel model;
@@ -124,12 +362,6 @@ class SellerController {
             }
         });
 
-        view.getBtnUpdateInventory().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleUpdateInventory();
-            }
-        });
 
         view.getBtnAddNewItem().addActionListener(new ActionListener() {
             @Override
@@ -167,6 +399,7 @@ class SellerController {
         JOptionPane.showMessageDialog(view.getFrame(), message, "Total Sales Information", JOptionPane.INFORMATION_MESSAGE);
     }
 
+
     // Add logic for calculating the sales metrics
     private double calculateNetSales(int totalSales) {
         return totalSales * 10; // For demonstration purposes
@@ -193,7 +426,17 @@ class SellerController {
     }
 
     private void handleInventory() {
-        // Logic for inventory
+        // Get or initialize your list of products
+        List<Product> products = Product.getProducts();
+
+        // Display the inventory view
+        InventoryModel inventoryModel = new InventoryModel(products);
+        InventoryView inventoryView = new InventoryView(products);
+        InventoryController inventoryController = new InventoryController(inventoryModel, inventoryView);
+
+        // Add logic to update the inventoryTextArea in the view
+        inventoryView.updateInventoryText(products);
+        inventoryView.display();
     }
 
     private void handleUpdateInventory() {

@@ -16,7 +16,7 @@ class CatalogView {
         frame = new JFrame("Product Catalog");
         productPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // 3 columns, auto rows, 10px gaps
 
-         // Cart Panel at the top-right
+        // Cart Panel at the top-right
         JPanel cartPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         cartItemCountLabel = new JLabel("Cart: 0 items"); // Initialize the label with 0 items
         cartPanel.add(cartItemCountLabel);
@@ -37,9 +37,9 @@ class CatalogView {
 
         shoppingCart = new ArrayList<>(); // Initialize the shopping cart list
 
-    
+
     }
-    
+
 
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
@@ -59,21 +59,21 @@ class CatalogView {
         JPanel card = new JPanel(new BorderLayout(5, 5));
         JLabel nameLabel = new JLabel(product.getName(), SwingConstants.CENTER);
         JLabel priceLabel = new JLabel(String.format("$%.2f", product.getPrice()), SwingConstants.CENTER);
-        
+
         // Adjust the description label to wrap text
         JLabel descriptionLabel = new JLabel("<html><body style='width: 100px'>" + product.getDescription() + "</body></html>");
-    
+
         // Buttons Panel
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         JButton btnAddToCart = new JButton("Add to Cart");
         JButton btnViewDetails = new JButton("View Details");
-    
+
         btnAddToCart.addActionListener(e -> addToCart(product));
         btnViewDetails.addActionListener(e -> viewProductDetails(product));
-    
+
         buttonsPanel.add(btnAddToCart);
         buttonsPanel.add(btnViewDetails);
-    
+
         // Use a SwingWorker to load image in the background
         new SwingWorker<ImageIcon, Void>() {
             @Override
@@ -83,7 +83,7 @@ class CatalogView {
                 Image image = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                 return new ImageIcon(image);
             }
-    
+
             @Override
             protected void done() {
                 try {
@@ -97,17 +97,17 @@ class CatalogView {
                 }
             }
         }.execute();
-    
+
         card.add(nameLabel, BorderLayout.NORTH);
         card.add(priceLabel, BorderLayout.SOUTH);
         card.add(descriptionLabel, BorderLayout.CENTER);
         card.add(buttonsPanel, BorderLayout.PAGE_END);
-    
+
         card.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-    
+
         return card;
     }
-    
+
     private void addToCart(Product product) {
         shoppingCart.add(product);
         updateCartDisplay();
@@ -117,7 +117,7 @@ class CatalogView {
         shoppingCart.clear();
         updateCartDisplay();
     }
-    
+
     private void updateCartDisplay() {
         cartItemCountLabel.setText("Cart: " + shoppingCart.size() + " items");
     }
@@ -151,12 +151,12 @@ class ProductCatalogController {
 
     public ProductCatalogController(CatalogView view) {
         this.view = view;
-        this.products = Product.getProducts(); 
+        this.products = Product.getProducts();
         initController();
     }
 
     private void initController() {
-        
+
         updateView();
     }
 
@@ -179,4 +179,3 @@ class CatalogMain {
         view.setVisible(true);
     }
 }
-
