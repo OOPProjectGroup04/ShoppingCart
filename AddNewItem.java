@@ -9,6 +9,8 @@ import java.util.Random;
  * It allows the user to input details about a product, such as its name,
  * quantity, price, ID, image URL, and description. It also handles the 
  * submission of this data to update or add a new product in the inventory.
+ * @author freddy ingle
+ * @author George martinez
  * @author Bryan Cooke
  */
 public class AddNewItem extends JFrame {

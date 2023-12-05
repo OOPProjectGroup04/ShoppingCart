@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * class for storing information about the products
+ * @author freddy ingle
+ * @author george martinez
+ * @author Bryan Cooke
+ * contributor: Sydney tivoli provided the image URLs
+ */
 public class Product {
     private int productID;
     private String name;
@@ -17,9 +24,18 @@ public class Product {
         this.description = description;
     }
 
+    /**
+     * 
+     * @return product id
+     */
     public int getProductID(){
         return productID;
     }
+    /**
+     * 
+     * @param productID
+     * @return product
+     */
     public static Product getProduct(int productID) {
         for (Product product : products) {
             if (product.getProductID() == productID) {
@@ -29,39 +45,91 @@ public class Product {
         return null;
     }
 
+    /**
+     * 
+     * @return price
+     */
     public double getPrice(){
         return price;
     }
+    /**
+     * 
+     * @return name
+     */
     public String getName(){
         return name;
     }
+    /**
+     * 
+     * @return desc
+     */
     public String getDescription(){
         return description;
     }
+    /**
+     * 
+     * @return quantity
+     */
     public int getQuantity(){
         return quantity;
     }
 
+    /**
+     * 
+     * @return imageURL
+     */
     public String getImageURL(){
         return imageURL;
     }
+    /**
+     * 
+     * @param imageURL
+     */
     public void setImageURL(String imageURL) {this.imageURL = imageURL;}
+    /**
+     * 
+     * @param productID
+     */
     public void setProductID(int productID) {
         this.productID = productID;
     }
+    /**
+     * 
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
+    /**
+     * 
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
+    /**
+     * 
+     * @param price
+     */
     public void setPrice(double price) {
         this.price = price;
     }
+    /**
+     * 
+     * @param quantity
+     */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+    /**
+     * 
+     * @return
+     */
     public boolean isAvailable() {return quantity > 0;}
+    /**
+     * 
+     * @return
+     */
     public String getProductDetails() {
         StringBuilder details = new StringBuilder();
         details.append("Name: ").append(name).append("\n");
