@@ -316,11 +316,10 @@ class InventoryController {
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // Check for duplicate product ID in the inventory
-                        int editedProductId = Integer.parseInt(idField.getText());
-                        if (!checkForDuplicateProductId(editedProductId, selectedProductId)) {
+                        // Validate non-negative quantity and price
+                        if (validateNonNegativeValues(quantityField, priceField)) {
                             // Update the selected product with the new values
-                            selectedProduct.get().setProductID(editedProductId);
+                            selectedProduct.get().setProductID(Integer.parseInt(idField.getText()));
                             selectedProduct.get().setName(nameField.getText());
                             selectedProduct.get().setDescription(descriptionField.getText());
                             selectedProduct.get().setPrice(Double.parseDouble(priceField.getText()));
@@ -331,10 +330,10 @@ class InventoryController {
 
                             // Update the display in the inventory view
                             view.updateInventoryText(model.getProducts());
-                        }
 
-                        // Close the dialog
-                        editDialog.dispose();
+                            // Close the dialog
+                            editDialog.dispose();
+                        }
                     }
                 });
 
@@ -372,6 +371,26 @@ class InventoryController {
         }
     }
 
+    // Helper method to validate non-negative quantity and price
+    private boolean validateNonNegativeValues(JTextField quantityField, JTextField priceField) {
+        try {
+            int quantity = Integer.parseInt(quantityField.getText());
+            double price = Double.parseDouble(priceField.getText());
+
+            if (quantity < 0 || price < 0) {
+                JOptionPane.showMessageDialog(view.getFrame(), "Please enter non-negative values for quantity and price.",
+                        "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            return true;
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(view.getFrame(), "Please enter valid numbers for quantity and price.",
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
     // Method to update the product in the model's list based on the old product ID
     private void updateProductInList(int oldProductId, Product updatedProduct) {
         List<Product> productList = model.getProducts();
@@ -383,7 +402,7 @@ class InventoryController {
             }
         }
     }
-    
+
     // Add a method to check for duplicate product ID in the inventory
     private boolean checkForDuplicateProductId(int editedProductId, int originalProductId) {
         // Check if a product with the same ID already exists, excluding the original product ID
