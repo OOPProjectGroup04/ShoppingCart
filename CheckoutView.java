@@ -77,6 +77,7 @@ public class CheckoutView {
         frame.add(bottomPanel, BorderLayout.SOUTH);
     }
 
+
     private void completePurchase() {
         JOptionPane.showMessageDialog(frame, "Thank you for your purchase!");
         shoppingCart.clear();

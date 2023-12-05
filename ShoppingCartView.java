@@ -14,7 +14,7 @@ class ShoppingCartView {
         this.frame = new JFrame("Shopping Cart");
         this.checkoutButton = new JButton("Checkout");
 
-        // Setup the frame and add components...
+        // Set up the frame and add components...
         checkoutButton.addActionListener(e -> openCheckoutView());
         frame.add(checkoutButton, BorderLayout.SOUTH); // Or wherever it needs to be placed
 
