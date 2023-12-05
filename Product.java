@@ -150,6 +150,32 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public boolean isAvailable() {return quantity > 0;}
+
+    public String getProductDetails() {
+        StringBuilder details = new StringBuilder();
+        details.append("Name: ").append(name).append("\n");
+        details.append("Price: $").append(String.format("%.2f", price)).append("\n");
+
+        // Check and include other product details if available
+        if (description != null && !description.isEmpty()) {
+            details.append("Description: ").append(description).append("\n");
+        } else {
+            details.append("Description: Information not available\n");
+        }
+
+        if (imageURL != null && !imageURL.isEmpty()) {
+            details.append("Image URL: ").append(imageURL).append("\n");
+        } else {
+            details.append("Image URL: Information not available\n");
+        }
+
+        details.append("Quantity: ").append(quantity).append(" left in stock\n");
+
+        return details.toString();
+    }
+
+
 
     /**
      * calls initializeProducts

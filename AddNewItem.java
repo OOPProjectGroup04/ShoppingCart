@@ -96,6 +96,12 @@ public class AddNewItem extends JFrame {
             String productImageURL = productImageURLField.getText(); // Example image URL
             String productDescribe = productDescribeField.getText();
 
+            // Check for negative quantity and price
+            if (quantity < 0 || price < 0) {
+                JOptionPane.showMessageDialog(this, "Please enter non-negative values for quantity and price.");
+                return;  // Exit the method to prevent further processing
+            }
+
             // Check for duplicate product entry
             Product existingProduct = Product.getProduct(productId);
             if (existingProduct != null) {
@@ -125,5 +131,4 @@ public class AddNewItem extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for quantity, price, and product ID.");
         }
     }
-
 }

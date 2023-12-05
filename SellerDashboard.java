@@ -433,11 +433,10 @@ class InventoryController {
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // Check for duplicate product ID in the inventory
-                        int editedProductId = Integer.parseInt(idField.getText());
-                        if (!checkForDuplicateProductId(editedProductId, selectedProductId)) {
+                        // Validate non-negative quantity and price
+                        if (validateNonNegativeValues(quantityField, priceField)) {
                             // Update the selected product with the new values
-                            selectedProduct.get().setProductID(editedProductId);
+                            selectedProduct.get().setProductID(Integer.parseInt(idField.getText()));
                             selectedProduct.get().setName(nameField.getText());
                             selectedProduct.get().setDescription(descriptionField.getText());
                             selectedProduct.get().setPrice(Double.parseDouble(priceField.getText()));
@@ -448,10 +447,10 @@ class InventoryController {
 
                             // Update the display in the inventory view
                             view.updateInventoryText(model.getProducts());
-                        }
 
-                        // Close the dialog
-                        editDialog.dispose();
+                            // Close the dialog
+                            editDialog.dispose();
+                        }
                     }
                 });
 
