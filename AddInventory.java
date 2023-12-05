@@ -109,4 +109,5 @@ public class AddInventory extends JFrame {
             JOptionPane.showMessageDialog(this, "Invalid input");
         }
     }
+
 }
