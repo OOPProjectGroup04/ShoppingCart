@@ -82,7 +82,7 @@ public class AddInventory extends JFrame {
             int productId = Integer.parseInt(productIdField.getText());
             int quantityToAdd = Integer.parseInt(quantityField.getText());
             Product product = Product.getProduct(productId);
-    
+
             if (product != null) {
                 product.setQuantity(product.getQuantity() + quantityToAdd);
                 JOptionPane.showMessageDialog(this, "Inventory Updated");

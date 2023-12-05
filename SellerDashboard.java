@@ -210,6 +210,14 @@ class InventoryView {
 
         inventoryTextArea.setText(inventoryText.toString());
     }
+
+    public boolean showDuplicateProductConfirmation() {
+        int option = JOptionPane.showConfirmDialog(frame,
+                "A product with the same ID already exists. Do you want to update the existing product?",
+                "Duplicate Product Entry", JOptionPane.YES_NO_OPTION);
+
+        return option == JOptionPane.YES_OPTION;
+    }
 }
 
 // InventoryController
@@ -250,6 +258,7 @@ class InventoryController {
         view.showDataRetrievalError();
     }
 
+
     private void handleEdit() {
         // Check if an item is selected
         String selectedText = view.getInventoryTextArea().getSelectedText();
@@ -282,8 +291,79 @@ class InventoryController {
                     .findFirst();
 
             if (selectedProduct.isPresent()) {
-                // Perform editing logic (e.g., open a dialog for editing)
-                handleEditProduct(selectedProduct.get());
+                // Create a dialog for editing
+                JDialog editDialog = new JDialog(view.getFrame(), "Edit Product", true);
+                editDialog.setSize(400, 300);
+                editDialog.setLayout(new GridLayout(6, 2));
+
+                // Create labels and text fields for each property
+                JLabel idLabel = new JLabel("Product ID:");
+                JTextField idField = new JTextField(String.valueOf(selectedProduct.get().getProductID()));
+                JLabel nameLabel = new JLabel("Product Name:");
+                JTextField nameField = new JTextField(selectedProduct.get().getName());
+                JLabel descriptionLabel = new JLabel("Description:");
+                JTextField descriptionField = new JTextField(selectedProduct.get().getDescription());
+                JLabel priceLabel = new JLabel("Price:");
+                JTextField priceField = new JTextField(String.valueOf(selectedProduct.get().getPrice()));
+                JLabel quantityLabel = new JLabel("Quantity:");
+                JTextField quantityField = new JTextField(String.valueOf(selectedProduct.get().getQuantity()));
+
+                // Create buttons for saving changes and canceling
+                JButton saveButton = new JButton("Save Changes");
+                JButton cancelButton = new JButton("Cancel");
+
+                // Add action listener to the save button
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Check for duplicate product ID in the inventory
+                        int editedProductId = Integer.parseInt(idField.getText());
+                        if (!checkForDuplicateProductId(editedProductId, selectedProductId)) {
+                            // Update the selected product with the new values
+                            selectedProduct.get().setProductID(editedProductId);
+                            selectedProduct.get().setName(nameField.getText());
+                            selectedProduct.get().setDescription(descriptionField.getText());
+                            selectedProduct.get().setPrice(Double.parseDouble(priceField.getText()));
+                            selectedProduct.get().setQuantity(Integer.parseInt(quantityField.getText()));
+
+                            // Update the product in the list
+                            updateProductInList(selectedProductId, selectedProduct.get());
+
+                            // Update the display in the inventory view
+                            view.updateInventoryText(model.getProducts());
+                        }
+
+                        // Close the dialog
+                        editDialog.dispose();
+                    }
+                });
+
+                // Add action listener to the cancel button
+                cancelButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Close the dialog without saving changes
+                        editDialog.dispose();
+                    }
+                });
+
+                // Add components to the dialog
+                editDialog.add(idLabel);
+                editDialog.add(idField);
+                editDialog.add(nameLabel);
+                editDialog.add(nameField);
+                editDialog.add(descriptionLabel);
+                editDialog.add(descriptionField);
+                editDialog.add(priceLabel);
+                editDialog.add(priceField);
+                editDialog.add(quantityLabel);
+                editDialog.add(quantityField);
+                editDialog.add(saveButton);
+                editDialog.add(cancelButton);
+
+                // Set the layout and make the dialog visible
+                editDialog.setLayout(new GridLayout(6, 2));
+                editDialog.setVisible(true);
             }
         } else {
             // Handle the case where selectedRow is invalid
@@ -292,78 +372,41 @@ class InventoryController {
         }
     }
 
+    // Method to update the product in the model's list based on the old product ID
+    private void updateProductInList(int oldProductId, Product updatedProduct) {
+        List<Product> productList = model.getProducts();
+
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getProductID() == oldProductId) {
+                productList.set(i, updatedProduct);
+                break;
+            }
+        }
+    }
+    
+    // Add a method to check for duplicate product ID in the inventory
+    private boolean checkForDuplicateProductId(int editedProductId, int originalProductId) {
+        // Check if a product with the same ID already exists, excluding the original product ID
+        boolean isDuplicate = model.getProducts().stream()
+                .anyMatch(product -> product.getProductID() == editedProductId && product.getProductID() != originalProductId);
+
+        if (isDuplicate) {
+            JOptionPane.showMessageDialog(view.getFrame(), "A product with the same ID already exists. Please choose a different ID.",
+                    "Duplicate Product ID", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return isDuplicate;
+    }
+
+
     // Add a method to handle the selection of items in the JTextArea
     private void handleSelection() {
         // You can add logic to handle selection if needed
     }
 
     private void handleEditProduct(Product product) {
-        // Create a dialog for editing
-        JDialog editDialog = new JDialog(view.getFrame(), "Edit Product", true);
-        editDialog.setSize(400, 300);
-        editDialog.setLayout(new GridLayout(6, 2));
-
-        // Create labels and text fields for each property
-        JLabel idLabel = new JLabel("Product ID:");
-        JTextField idField = new JTextField(String.valueOf(product.getProductID())); // Display current ID
-        JLabel nameLabel = new JLabel("Product Name:");
-        JTextField nameField = new JTextField(product.getName());
-        JLabel descriptionLabel = new JLabel("Description:");
-        JTextField descriptionField = new JTextField(product.getDescription());
-        JLabel priceLabel = new JLabel("Price:");
-        JTextField priceField = new JTextField(String.valueOf(product.getPrice()));
-        JLabel quantityLabel = new JLabel("Quantity:");
-        JTextField quantityField = new JTextField(String.valueOf(product.getQuantity()));
-
-        // Create buttons for saving changes and canceling
-        JButton saveButton = new JButton("Save Changes");
-        JButton cancelButton = new JButton("Cancel");
-
-        // Add action listener to the save button
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Update the selected product with the new values
-                product.setProductID(Integer.parseInt(idField.getText())); // Update ID
-                product.setName(nameField.getText());
-                product.setDescription(descriptionField.getText());
-                product.setPrice(Double.parseDouble(priceField.getText()));
-                product.setQuantity(Integer.parseInt(quantityField.getText()));
-
-                // Update the display in the inventory view
-                view.updateInventoryText(model.getProducts());
-
-                // Close the dialog
-                editDialog.dispose();
-            }
-        });
-
-        // Add action listener to the cancel button
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Close the dialog without saving changes
-                editDialog.dispose();
-            }
-        });
-
-        // Add components to the dialog
-        editDialog.add(idLabel);
-        editDialog.add(idField);
-        editDialog.add(nameLabel);
-        editDialog.add(nameField);
-        editDialog.add(descriptionLabel);
-        editDialog.add(descriptionField);
-        editDialog.add(priceLabel);
-        editDialog.add(priceField);
-        editDialog.add(quantityLabel);
-        editDialog.add(quantityField);
-        editDialog.add(saveButton);
-        editDialog.add(cancelButton);
-
-        // Set the layout and make the dialog visible
-        editDialog.setLayout(new GridLayout(6, 2));
-        editDialog.setVisible(true);
+        // Update the display in the inventory view
+        view.updateInventoryText(model.getProducts());
     }
 }
 
