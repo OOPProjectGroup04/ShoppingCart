@@ -81,11 +81,31 @@ public class AddNewItem extends JFrame {
             String productImageURL = productImageURLField.getText(); // Example image URL
             String productDescribe = productDescribeField.getText();
 
-            // Add new product to inventory
-            Product product = new Product(productId, productName, price, quantity, productImageURL, productDescribe);
-            Product.addProduct(product);
+            // Check for duplicate product entry
+            Product existingProduct = Product.getProduct(productId);
+            if (existingProduct != null) {
+                int option = JOptionPane.showConfirmDialog(null,
+                        "A product with the same ID already exists. Do you want to update the existing product?",
+                        "Duplicate Product Entry", JOptionPane.YES_NO_OPTION);
 
-            JOptionPane.showMessageDialog(this, "Inventory added successfully!");
+                if (option == JOptionPane.YES_OPTION) {
+                    // Update the existing product
+                    existingProduct.setName(productName);
+                    existingProduct.setQuantity(quantity);
+                    existingProduct.setPrice(price);
+                    existingProduct.setImageURL(productImageURL);
+                    existingProduct.setDescription(productDescribe);
+                    JOptionPane.showMessageDialog(this, "Product updated successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Product not updated.");
+                }
+
+            } else {
+                // No duplicate found, add the new product to inventory
+                Product.addProduct(new Product(productId, productName, price, quantity, productImageURL, productDescribe));
+                JOptionPane.showMessageDialog(this, "Product added successfully!");
+            }
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for quantity, price, and product ID.");
         }

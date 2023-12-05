@@ -53,6 +53,8 @@ public class Product {
         return imageURL;
     }
 
+    public void setImageURL(String imageURL) {this.imageURL = imageURL;}
+
     public void setProductID(int productID) {
         this.productID = productID;
     }
