@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 class CatalogView {
     private JFrame frame;
     private JPanel productPanel;
-    private JLabel cartItemCountLabel; //keep count of cart items
-    private List<Product> shoppingCart; //list of cart items
+    private static JLabel cartItemCountLabel; //keep count of cart items
+    private static List<Product> shoppingCart; //list of cart items
 
     public CatalogView() {
         frame = new JFrame("Product Catalog");
@@ -36,6 +38,7 @@ class CatalogView {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         shoppingCart = new ArrayList<>(); // Initialize the shopping cart list
+        refreshCartDisplay();
 
 
     }
@@ -110,38 +113,44 @@ class CatalogView {
 
     private void addToCart(Product product) {
         shoppingCart.add(product);
-        updateCartDisplay();
+        refreshCartDisplay();
         JOptionPane.showMessageDialog(frame, product.getName() + " added to cart!");
     }
     public void clearShoppingCart() {
         shoppingCart.clear();
-        updateCartDisplay();
+        refreshCartDisplay();
     }
 
-    private void updateCartDisplay() {
-        cartItemCountLabel.setText("Cart: " + shoppingCart.size() + " items");
-    }
     private void viewProductDetails(Product product) {
         // Implementation of product details view
+                refreshCartDisplay();
+
         JOptionPane.showMessageDialog(frame, "Product Details:\n" + product);
     }
     private void viewCart() {
         // Implementation to view the cart contents
+                refreshCartDisplay();
+
         ShoppingCartView cartView = new ShoppingCartView(shoppingCart);
         cartView.displayCartItems();
     }
 
     public void displayCustomerHomepage() {
+        refreshCartDisplay();
         SwingUtilities.invokeLater(() -> {
             CatalogMain catalogMain = new CatalogMain();
             catalogMain.display();
         });
     }
 
-    public void refreshCartDisplay() {
+    public static void refreshCartDisplay() {
+
         cartItemCountLabel.setText("Cart: " + shoppingCart.size() + " items");
         // Any other UI updates related to the cart
     }
+
+
+
 
 
 }
@@ -150,6 +159,7 @@ class ProductCatalogController {
     private CatalogView view;
 
     public ProductCatalogController(CatalogView view) {
+        
         this.view = view;
         this.products = Product.getProducts();
         initController();

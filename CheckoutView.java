@@ -78,10 +78,20 @@ public class CheckoutView {
     }
 
     private void completePurchase() {
-        JOptionPane.showMessageDialog(frame, "Thank you for your purchase!");
+        // Update Inventory
+        shoppingCart.forEach(product -> {
+            Product.getProduct(product.getProductID()).setQuantity(Product.getProduct(product.getProductID()).getQuantity() - 1);
+        });
         shoppingCart.clear();
+        if (shoppingCart.size() == 0) {
+            CatalogView.refreshCartDisplay();
+        }
+
+        JOptionPane.showMessageDialog(frame, "Thank you for your purchase!");
+
         frame.dispose();
     }
+    
 
     private void goBackToCart() {
         // Placeholder for going back to the cart

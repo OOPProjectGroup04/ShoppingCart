@@ -8,6 +8,7 @@ public class Product {
     private double price;
     private int quantity;
     private String imageURL;
+    private static List<Product> products = new ArrayList<>();
 
 
     public Product(int productID, String name, double price, int quantity, String imageURL, String description) {
@@ -21,6 +22,15 @@ public class Product {
    
     public int getProductID(){
         return productID;
+    }
+
+    public static Product getProduct(int productID) {
+        for (Product product : products) {
+            if (product.getProductID() == productID) {
+                return product;
+            }
+        }
+        return null;
     }
     
     public double getPrice(){
@@ -63,9 +73,18 @@ public class Product {
         this.quantity = quantity;
     }
 
-    // Static method to create and return a list of products
+
+    static {
+        initializeProducts();
+    }
+
     public static List<Product> getProducts() {
-        List<Product> products = new ArrayList<>();
+        return new ArrayList<>(products); // Return a copy to avoid modification of the original list
+    }
+
+    // Static method to create a list of products
+    public static void initializeProducts() {
+
         products.add(new Product(101, "Laptop", 999.99, 10, "https://m.media-amazon.com/images/I/81zKcC5wJ6L._AC_UF1000,1000_QL80_.jpg", "A high-performance laptop."));
         products.add(new Product(102, "Smartphone", 499.99, 15, "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1692845702708", "An innovative smartphone with the best camera."));
         products.add(new Product(103, "DashCam", 99.99, 30, "https://m.media-amazon.com/images/I/61-ouW+YFlL.jpg", "A Dashcam for your car."));
@@ -86,9 +105,13 @@ public class Product {
         products.add(new Product(19, "Backpack", 59.99, 35, "https://m.media-amazon.com/images/I/81d1YjW6z-L._AC_UY1000_.jpg", "Durable backpack for travel and everyday use."));
         products.add(new Product(20, "Leather Wallet", 49.99, 45, "https://media.gucci.com/style/DarkGray_Center_0_0_490x490/1463502620/428726_DJ20T_1000_001_080_0000_Light.jpg", "Elegant leather wallet with RFID blocking."));
         products.add(new Product(22, "Noise-cancelling Earplugs", 25.99, 50, "https://m.media-amazon.com/images/I/615FjNyNApL.jpg", "Reusable earplugs with superior noise cancellation."));
-
-        return products;
     }
+
+
+    public static void addProduct(Product product) {
+        products.add(product);
+    }
+    
   
     @Override
     public String toString() {

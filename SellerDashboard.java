@@ -36,6 +36,7 @@ class SellerView {
     private JButton btnInventory;
     private JButton btnAddNewItem;
     private JLabel titleLabel;
+    private JButton btnAddNewInventory;
 
     public SellerView() {
         frame = new JFrame("Seller Dashboard");
@@ -53,10 +54,13 @@ class SellerView {
         btnTotalSales = new JButton("Check Total Sales");
         btnInventory = new JButton("View/Edit Inventory");
         btnAddNewItem = new JButton("Add New Item");
+        btnAddNewInventory = new JButton("Add New Inventory");
+
 
         buttonPanel.add(btnTotalSales);
         buttonPanel.add(btnInventory);
         buttonPanel.add(btnAddNewItem);
+        buttonPanel.add(btnAddNewInventory);
 
         frame.add(buttonPanel, BorderLayout.CENTER);
 
@@ -64,12 +68,14 @@ class SellerView {
         btnTotalSales.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnInventory.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnAddNewItem.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnAddNewInventory.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Add buttons to the button panel with alignment and padding
         buttonPanel.add(Box.createVerticalGlue());
         buttonPanel.add(btnTotalSales);
         buttonPanel.add(btnInventory);
         buttonPanel.add(btnAddNewItem);
+        buttonPanel.add(btnAddNewInventory);
         buttonPanel.add(Box.createVerticalGlue());
 
         frame.add(buttonPanel, BorderLayout.CENTER);
@@ -93,6 +99,10 @@ class SellerView {
 
     public JButton getBtnAddNewItem() {
         return btnAddNewItem;
+    }
+
+    public JButton getBtnAddNewInventory() {
+        return btnAddNewInventory;
     }
 }
 
@@ -388,6 +398,13 @@ class SellerController {
             }
         });
 
+        view.getBtnAddNewInventory().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleAddNewInventory();
+            }
+        });
+
         // Initialize model data (for demonstration purposes)
         model.setTotalSales(500);
         model.setInventoryCount(50);
@@ -466,11 +483,18 @@ class SellerController {
 
 
     private void handleAddNewItem() {
-        // Logic for adding new item
+        new AddNewItem().setVisible(true);
     }
 
     // Add a method to display the SellerDashboard
     public void displaySellerDashboard() {view.display();}
+
+
+    private void handleAddNewInventory() {
+        new AddInventory().setVisible(true);
+    }
+
+
 }
 
 
