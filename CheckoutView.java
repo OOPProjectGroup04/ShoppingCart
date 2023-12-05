@@ -77,6 +77,7 @@ public class CheckoutView {
         frame.add(bottomPanel, BorderLayout.SOUTH);
     }
 
+
     private void completePurchase() {
         // Update Inventory
         shoppingCart.forEach(product -> {

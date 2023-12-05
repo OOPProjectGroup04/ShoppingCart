@@ -14,6 +14,11 @@ class CatalogView {
     private static JLabel cartItemCountLabel; //keep count of cart items
     private static List<Product> shoppingCart; //list of cart items
 
+
+    public int getCartSize() { //use for junit test
+        return shoppingCart.size();
+    }
+
     public CatalogView() {
         frame = new JFrame("Product Catalog");
         productPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // 3 columns, auto rows, 10px gaps
@@ -39,6 +44,8 @@ class CatalogView {
 
         shoppingCart = new ArrayList<>(); // Initialize the shopping cart list
         refreshCartDisplay();
+
+
 
 
     }
@@ -111,7 +118,8 @@ class CatalogView {
         return card;
     }
 
-    private void addToCart(Product product) {
+
+    public void addToCart(Product product) {
         shoppingCart.add(product);
         refreshCartDisplay();
         JOptionPane.showMessageDialog(frame, product.getName() + " added to cart!");
@@ -174,7 +182,7 @@ class ProductCatalogController {
         view.setProducts(products);
     }
 
-    // Additional methods for handling user actions
+    // methods for handling user actions
 }
 // CatalogMain (Main class for customer homepage)
 class CatalogMain {
@@ -189,3 +197,4 @@ class CatalogMain {
         view.setVisible(true);
     }
 }
+
