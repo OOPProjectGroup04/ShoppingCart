@@ -7,28 +7,60 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
 
+/**
+ * This class represents the model for a seller in the application.
+ * It handles the storage and management of the seller's total sales and inventory count.
+ * 
+ * Authors are written for each class in this file
+ * @author freddy ingle
+ * @author george martinez
+ */
 // Model
 class SellerModel {
     private int totalSales;
     private int inventoryCount;
 
+    /**
+     * Gets the total sales of the seller.
+     *
+     * @return The total sales amount.
+     */
     public int getTotalSales() {
         return totalSales;
     }
 
+    /**
+     *  set total sales
+     * @param totalSales
+     */
     public void setTotalSales(int totalSales) {
         this.totalSales = totalSales;
     }
 
+    /**
+     * 
+     * @return inventoryCount
+     */
     public int getInventoryCount() {
         return inventoryCount;
     }
 
+    /**
+     *  set inventory count
+     * @param inventoryCount
+     */
     public void setInventoryCount(int inventoryCount) {
         this.inventoryCount = inventoryCount;
     }
 }
 
+/**
+ * This class represents the view for a seller in the application.
+ * It creates and displays the seller dashboard interface including buttons for various actions.
+ * @author george martinez
+ * @author freddy ingle
+ * @author Bryan Cooke
+ */
 // View 
 class SellerView {
     private JFrame frame;
@@ -38,6 +70,9 @@ class SellerView {
     private JLabel titleLabel;
     private JButton btnAddNewInventory;
 
+    /**
+     * Constructs the SellerView with all its UI components.
+     */
     public SellerView() {
         frame = new JFrame("Seller Dashboard");
         frame.setSize(600, 400);
@@ -54,13 +89,13 @@ class SellerView {
         btnTotalSales = new JButton("Check Total Sales");
         btnInventory = new JButton("View/Edit Inventory");
         btnAddNewItem = new JButton("Add New Item");
-        btnAddNewInventory = new JButton("Add New Inventory");
+        //btnAddNewInventory = new JButton("Add New Inventory");
 
 
         buttonPanel.add(btnTotalSales);
         buttonPanel.add(btnInventory);
         buttonPanel.add(btnAddNewItem);
-        buttonPanel.add(btnAddNewInventory);
+        //buttonPanel.add(btnAddNewInventory);
 
         frame.add(buttonPanel, BorderLayout.CENTER);
 
@@ -68,45 +103,69 @@ class SellerView {
         btnTotalSales.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnInventory.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnAddNewItem.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnAddNewInventory.setAlignmentX(Component.CENTER_ALIGNMENT);
+       // btnAddNewInventory.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Add buttons to the button panel with alignment and padding
         buttonPanel.add(Box.createVerticalGlue());
         buttonPanel.add(btnTotalSales);
         buttonPanel.add(btnInventory);
         buttonPanel.add(btnAddNewItem);
-        buttonPanel.add(btnAddNewInventory);
+        //buttonPanel.add(btnAddNewInventory);
         buttonPanel.add(Box.createVerticalGlue());
 
         frame.add(buttonPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * 
+     * @return frame
+     */
     public JFrame getFrame() {
         return frame;
     }
 
+    /**
+     * set the frame
+     */
     public void display() {
         frame.setVisible(true);
     }
 
+    /**
+     * 
+     * @return total sales button
+     */
     public JButton getBtnTotalSales() {
         return btnTotalSales;
     }
 
+    /**
+     * 
+     * @return inventory button
+     */
     public JButton getBtnInventory() {
         return btnInventory;
     }
 
+    /**
+     * 
+     * @return add new item button
+     */
     public JButton getBtnAddNewItem() {
         return btnAddNewItem;
     }
 
-    public JButton getBtnAddNewInventory() {
+    /*public JButton getBtnAddNewInventory() {
         return btnAddNewInventory;
-    }
+    }*/
 }
 
 // InventoryModel
+/**
+ * Model in MVC pattern for inventory 
+ * @author freddy ingle
+ * @author george martinez
+ */
 class InventoryModel {
     private List<Product> products;
 
@@ -123,12 +182,23 @@ class InventoryModel {
 }
 
 // InventoryView
+/**
+ * View in MVC pattern for inventory 
+ * It creates and displays the interface for viewing and editing the inventory.
+ * @author george martinez
+ * @author freddy ingle
+ */
 class InventoryView {
     private JFrame frame;
     private JTextArea inventoryTextArea;
     private JButton btnBack;
     private JButton btnEdit;
 
+    /**
+     * Constructs the InventoryView with the specified list of products.
+     *
+     * @param products The list of products to display in the inventory view.
+     */
     public InventoryView(List<Product> products) {
         frame = new JFrame("View/Edit Inventory");
         frame.setSize(600, 400);
@@ -168,30 +238,55 @@ class InventoryView {
         });
     }
 
+    /**
+     * 
+     * @return frame
+     */
     public JFrame getFrame() {
         return frame;
     }
 
+    /**
+     * 
+     * @return inventory text area
+     */
     public JTextArea getInventoryTextArea() {
         return inventoryTextArea;
     }
 
+    /**
+     * set the frame
+     */
     public void display() {
         frame.setVisible(true);
     }
 
+    /**
+     * 
+     * @return Edit button
+     */
     public JButton getBtnEdit() {
         return btnEdit;
     }
 
+    /**
+     * show no product in inventory message
+     */
     public void showEmptyInventoryMessage() {
         showMessage("No products are currently available in the inventory.");
     }
 
+    /**
+     * show error message : data retrieval error
+     */
     public void showDataRetrievalError() {
         showMessage("Error fetching inventory data. Please try again later.");
     }
 
+    /**
+     * 
+     * @param message
+     */
     private void showMessage(String message) {
         JOptionPane.showMessageDialog(frame, message, "Inventory Information", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -199,6 +294,10 @@ class InventoryView {
     private void handleEdit() {
     }
 
+    /**
+     * edits the selected inventory with new user changes in string format
+     * @param products
+     */
     public void updateInventoryText(List<Product> products) {
         StringBuilder inventoryText = new StringBuilder();
         inventoryText.append(String.format("%-10s %-20s %-15s %-10s\n", "Product ID", "Product Name", "Quantity", "Price"));
@@ -211,6 +310,10 @@ class InventoryView {
         inventoryTextArea.setText(inventoryText.toString());
     }
 
+    /**
+     * Shows a confirmation dialog for duplicate product entries.
+     * @return true if the user chooses to update the existing product, false otherwise.
+     */
     public boolean showDuplicateProductConfirmation() {
         int option = JOptionPane.showConfirmDialog(frame,
                 "A product with the same ID already exists. Do you want to update the existing product?",
@@ -221,10 +324,21 @@ class InventoryView {
 }
 
 // InventoryController
+/**
+ * This class serves as the controller for the InventoryView.
+ * It handles user interactions from the InventoryView and updates the InventoryModel accordingly.
+ * @author george martinez
+ */
 class InventoryController {
     private InventoryModel model;
     private InventoryView view;
 
+    /**
+     * Constructs an InventoryController with the specified model and view.
+     *
+     * @param model The InventoryModel to manage inventory data.
+     * @param view  The InventoryView to interact with the user.
+     */
     public InventoryController(InventoryModel model, InventoryView view) {
         this.model = model;
         this.view = view;
@@ -254,6 +368,9 @@ class InventoryController {
         });
     }
 
+     /**
+     * Handles errors during data retrieval by showing an error message.
+     */
     public void handleDataRetrievalError() {
         view.showDataRetrievalError();
     }
@@ -372,7 +489,13 @@ class InventoryController {
         }
     }
 
-    // Method to update the product in the model's list based on the old product ID
+    
+     /**
+     * Updates a product in the model's product list.
+     *
+     * @param oldProductId   The old product ID.
+     * @param updatedProduct The updated product object.
+     */
     private void updateProductInList(int oldProductId, Product updatedProduct) {
         List<Product> productList = model.getProducts();
 
@@ -384,7 +507,14 @@ class InventoryController {
         }
     }
     
-    // Add a method to check for duplicate product ID in the inventory
+    
+    /**
+     * Checks for duplicate product ID in the inventory.
+     *
+     * @param editedProductId   The new product ID.
+     * @param originalProductId The original product ID.
+     * @return true if a duplicate product ID exists, false otherwise.
+     */
     private boolean checkForDuplicateProductId(int editedProductId, int originalProductId) {
         // Check if a product with the same ID already exists, excluding the original product ID
         boolean isDuplicate = model.getProducts().stream()
@@ -404,6 +534,11 @@ class InventoryController {
         // You can add logic to handle selection if needed
     }
 
+    /**
+     * Handles updating the view after editing a product.
+     *
+     * @param product The edited product.
+     */
     private void handleEditProduct(Product product) {
         // Update the display in the inventory view
         view.updateInventoryText(model.getProducts());
@@ -411,10 +546,23 @@ class InventoryController {
 }
 
 // SellerController (Controller)
+/**
+ * This class serves as the controller for the SellerView.
+ * It handles user interactions from the SellerView and updates the SellerModel accordingly.
+ * @author bryan cooke
+ * @author george martinez
+ * @author freddy ingle
+ */
 class SellerController {
     private SellerModel model;
     private SellerView view;
 
+     /**
+     * Constructs a SellerController with the specified model and view.
+     *
+     * @param model The SellerModel to manage seller data.
+     * @param view  The SellerView to interact with the user.
+     */
     public SellerController(SellerModel model, SellerView view) {
         this.model = model;
         this.view = view;
@@ -441,18 +589,21 @@ class SellerController {
             }
         });
 
-        view.getBtnAddNewInventory().addActionListener(new ActionListener() {
+        /*view.getBtnAddNewInventory().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleAddNewInventory();
             }
-        });
+        });*/
 
         // Initialize model data (for demonstration purposes)
         model.setTotalSales(500);
         model.setInventoryCount(50);
     }
 
+    /**
+     * Handles the display of total sales metrics.
+     */
     private void handleTotalSales() {
         // Logic for total sales
         // Retrieve data from the model
@@ -479,30 +630,60 @@ class SellerController {
 
 
     // Add logic for calculating the sales metrics
+    /**
+     * Calculates the net sales.
+     *
+     * @param totalSales The total sales amount.
+     * @return The net sales amount.
+     */
     private double calculateNetSales(int totalSales) {
         return totalSales * 10; // For demonstration purposes
     }
 
+    /**
+     * calculates shipping costs
+     * 
+     * @return shipping cost amount
+     */
     private double calculateShippingCosts() {
         // Add logic
         return 200.0; // For demonstration purposes
     }
 
+    /**
+     * 
+     * @return production costs amount
+     */
     private double calculateProductionCosts() {
         // Add logic
         return 3000.0; // For demonstration purposes
     }
 
+    /**
+     * 
+     * @return seller fees amount
+     */
     private double calculateSellerFees() {
         // Add logic
         return 500.0; // For demonstration purposes
     }
 
+    /**
+     * 
+     * @param netSales
+     * @param shippingCosts
+     * @param productionCosts
+     * @param sellerFees
+     * @return Profit
+     */
     private double calculateProfit(double netSales, double shippingCosts, double productionCosts, double sellerFees) {
         // Add logic
         return netSales - (shippingCosts + productionCosts + sellerFees);
     }
 
+    /**
+     * Handles the display and management of inventory.
+     */
     private void handleInventory() {
         // Get or initialize your list of products
         List<Product> products = Product.getProducts();
@@ -525,14 +706,23 @@ class SellerController {
     }
 
 
+    /**
+     * display new item 
+     */
     private void handleAddNewItem() {
         new AddNewItem().setVisible(true);
     }
 
-    // Add a method to display the SellerDashboard
+    
+    /**
+     * display the seller Dashboard
+     */
     public void displaySellerDashboard() {view.display();}
 
 
+    /**
+     * display the new inventory 
+     */
     private void handleAddNewInventory() {
         new AddInventory().setVisible(true);
     }
@@ -541,7 +731,13 @@ class SellerController {
 }
 
 
-// Main class to run the application
+
+/**
+ * The main class for the application. It sets up the seller dashboard by initializing
+ * the model, view, and controller, and then makes the view visible.
+ * @author freddy ingle
+ * @author george martinez
+ */
 class Main {
     public static void main(String[] args) {
         List<Product> products = Product.getProducts();

@@ -4,14 +4,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+/**
+ * This class represents a GUI form for adding new items to an inventory.
+ * It allows the user to input details about a product, such as its name,
+ * quantity, price, ID, image URL, and description. It also handles the 
+ * submission of this data to update or add a new product in the inventory.
+ * @author Bryan Cooke
+ */
 public class AddNewItem extends JFrame {
-    private JTextField productNameField, quantityField, priceField, productIdField, productImageURLField,productDescribeField;
+    private JTextField productNameField, quantityField, priceField, productIdField, productImageURLField, productDescribeField;
     private JButton submitButton;
 
+    /**
+     * Constructor for AddNewItem. It initializes the user interface.
+     */
     public AddNewItem() {
         createUI();
     }
 
+    /**
+     * Creates the user interface for the AddNewItem window.
+     * This method sets up the layout and components of the GUI.
+     */
     private void createUI() {
         setTitle("Add New Item");
         setSize(300, 200);
@@ -29,7 +43,6 @@ public class AddNewItem extends JFrame {
         add(new JLabel("Price:"));
         priceField = new JTextField("00.00", 10); // Example current price
         add(priceField);
-
 
         Random randomNum = new Random();
         int min = 100;
@@ -66,12 +79,14 @@ public class AddNewItem extends JFrame {
         });
         add(backButton);
 
-
-    
-
         setLocationRelativeTo(null); // Center on screen
     }
 
+    /**
+     * Updates the inventory with the information provided in the form.
+     * If a product with the same ID already exists, it offers an option to
+     * update the existing product. Otherwise, it adds a new product.
+     */
     private void updateInventory() {
         try {
             String productName = productNameField.getText();

@@ -5,13 +5,26 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+/**
+ * This class represents the user interface for adding inventory to a product.
+ * It provides fields for entering product ID and the quantity to add, and updates the inventory accordingly.
+ * @author george martinez
+ * @author freddy ingle
+ * @author bryan cooke
+ */
 public class AddInventory extends JFrame {
     private JTextField productIdField, quantityField;
     private JButton submitButton;
 
+    /**
+     * Constructs the AddInventory interface.
+     */
     public AddInventory() {
         createUI();
     }
+     /**
+     * Creates the user interface components and layout.
+     */
     private void createUI() {
         setTitle("Add New Inventory");
         setSize(300, 200);
@@ -77,6 +90,9 @@ public class AddInventory extends JFrame {
         setLocationRelativeTo(null); // Center on screen
     }
 
+    /**
+     *  Updates the inventory based on the input provided in the text fields.
+     */
     private void updateInventory() {
         try {
             int productId = Integer.parseInt(productIdField.getText());

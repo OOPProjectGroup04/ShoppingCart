@@ -8,6 +8,12 @@ import javax.swing.event.ChangeListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+/**
+ * This class represents the main view of the product catalog in a GUI application.
+ * It displays products and allows users to add items to a shopping cart.
+ * @author Freddy Ingle
+ * @author George Martinez
+ */
 class CatalogView {
     private JFrame frame;
     private JPanel productPanel;
@@ -15,10 +21,18 @@ class CatalogView {
     private static List<Product> shoppingCart; //list of cart items
 
 
+    /**
+     * Gets the current size of the shopping cart.
+     * 
+     * @return the number of items in the shopping cart.
+     */
     public int getCartSize() { //use for junit test
         return shoppingCart.size();
     }
 
+    /**
+     * Constructs the CatalogView by initializing the GUI components.
+     */
     public CatalogView() {
         frame = new JFrame("Product Catalog");
         productPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // 3 columns, auto rows, 10px gaps
@@ -51,10 +65,20 @@ class CatalogView {
     }
 
 
+    /**
+     * Sets the visibility of the main frame.
+     * 
+     * @param visible boolean flag to set the frame's visibility.
+     */
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
     }
 
+      /**
+     * Sets and displays the list of products in the catalog.
+     * 
+     * @param products the list of products to be displayed.
+     */
     public void setProducts(List<Product> products) {
         productPanel.removeAll(); // Remove all previous components
         for (Product product : products) {
@@ -65,6 +89,12 @@ class CatalogView {
         productPanel.repaint();
     }
 
+    /**
+     * Creates and returns a JPanel representing a single product card.
+     * 
+     * @param product the product to create a card for.
+     * @return a JPanel representing the product.
+     */
     private JPanel createProductCard(Product product) {
         JPanel card = new JPanel(new BorderLayout(5, 5));
         JLabel nameLabel = new JLabel(product.getName(), SwingConstants.CENTER);
@@ -119,22 +149,39 @@ class CatalogView {
     }
 
 
+    /**
+     * Adds a given product to the shopping cart and refreshes the cart display.
+     * 
+     * @param product the product to add to the shopping cart.
+     */
     public void addToCart(Product product) {
         shoppingCart.add(product);
         refreshCartDisplay();
         JOptionPane.showMessageDialog(frame, product.getName() + " added to cart!");
     }
+    /**
+     * Clears all items from the shopping cart and updates the display.
+     */
     public void clearShoppingCart() {
         shoppingCart.clear();
         refreshCartDisplay();
     }
 
+
+      /**
+     * Displays details of a specific product in a dialog.
+     * 
+     * @param product the product whose details are to be displayed.
+     */
     private void viewProductDetails(Product product) {
         // Implementation of product details view
                 refreshCartDisplay();
 
         JOptionPane.showMessageDialog(frame, "Product Details:\n" + product);
     }
+     /**
+     * Displays the shopping cart view.
+     */
     private void viewCart() {
         // Implementation to view the cart contents
                 refreshCartDisplay();
@@ -143,6 +190,9 @@ class CatalogView {
         cartView.displayCartItems();
     }
 
+    /**
+     * Displays the customer homepage view.
+     */
     public void displayCustomerHomepage() {
         refreshCartDisplay();
         SwingUtilities.invokeLater(() -> {
@@ -151,6 +201,9 @@ class CatalogView {
         });
     }
 
+     /**
+     * Updates the cart display label with the current number of items in the cart.
+     */
     public static void refreshCartDisplay() {
 
         cartItemCountLabel.setText("Cart: " + shoppingCart.size() + " items");
@@ -162,10 +215,18 @@ class CatalogView {
 
 
 }
+/**
+ * Controller for managing the product catalog view and interactions.
+ */
 class ProductCatalogController {
     private List<Product> products;
     private CatalogView view;
 
+     /**
+     * Constructor for the product catalog controller.
+     * 
+     * @param view the CatalogView to control.
+     */
     public ProductCatalogController(CatalogView view) {
         
         this.view = view;
@@ -173,26 +234,41 @@ class ProductCatalogController {
         initController();
     }
 
+    /**
+     * Initializes the controller by setting up the view with data.
+     */
     private void initController() {
 
         updateView();
     }
 
+
+    /**
+     * Updates the view with the list of products.
+     */
     private void updateView() {
         view.setProducts(products);
     }
 
     // methods for handling user actions
 }
-// CatalogMain (Main class for customer homepage)
+/**
+ * Main class for launching the catalog view as part of a GUI application.
+ */// CatalogMain (Main class for customer homepage)
 class CatalogMain {
     private CatalogView view;
 
+    /**
+     * Constructs the main application view and controller.
+     */
     public CatalogMain() {
         this.view = new CatalogView();
         new ProductCatalogController(view);
     }
 
+     /**
+     * Displays the main application view.
+     */
     public void display() {
         view.setVisible(true);
     }

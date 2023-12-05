@@ -1,14 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
-
 import java.util.List;
 
+/**
+ * This class represents the checkout view in a GUI application for a shopping cart system.
+ * It displays the items in the shopping cart and allows the user to complete the purchase.
+ * 
+ * @author Freddy Ingle
+ * @author George Martinez
+ * 
+ */
 public class CheckoutView {
     private JFrame frame;
     private List<Product> shoppingCart; // The shopping cart items
     private double total; // Total price of items in the cart
     private CatalogView catalogView; // Reference to the CatalogView
 
+    /**
+     * Constructs the CheckoutView with a given shopping cart.
+     * 
+     * @param shoppingCart The list of products in the shopping cart.
+     */
     public CheckoutView(List<Product> shoppingCart) {
         this.shoppingCart = shoppingCart;
         this.catalogView = catalogView;
@@ -30,6 +42,9 @@ public class CheckoutView {
         frame.setVisible(true);
     }
 
+    /**
+     * Creates and adds the cart items panel to the frame.
+     */
     private void createCartItemsPanel() {
         JPanel cartItemsPanel = new JPanel();
         cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
@@ -43,6 +58,9 @@ public class CheckoutView {
         frame.add(new JScrollPane(cartItemsPanel), BorderLayout.CENTER);
     }
 
+    /**
+     * Creates and adds the checkout information panel to the frame.
+     */
     private void createCheckoutInfoPanel() {
         JPanel infoPanel = new JPanel(new GridLayout(0, 2, 10, 10));
 
@@ -61,6 +79,9 @@ public class CheckoutView {
         frame.add(infoPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Creates and adds the bottom panel (including total and buttons) to the frame.
+     */
     private void createBottomPanel() {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel totalLabel = new JLabel("Total: $" + total);
@@ -78,6 +99,9 @@ public class CheckoutView {
     }
 
 
+     /**
+     * Handles the completion of the purchase, updating inventory and clearing the cart.
+     */
     private void completePurchase() {
         // Update Inventory
         shoppingCart.forEach(product -> {
@@ -94,6 +118,9 @@ public class CheckoutView {
     }
     
 
+     /**
+     * Handles the action to go back to the cart view.
+     */
     private void goBackToCart() {
         // Placeholder for going back to the cart
         frame.dispose();
