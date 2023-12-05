@@ -1,14 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Represents a product in the application. It stores product details and manages a list of products.
- * @author freddy ingle
- * @author george martinez
- * 
- * contributor: Sydney Tivoli uploaded the image URLs
- */
-
 public class Product {
     private int productID;
     private String name;
@@ -17,19 +8,6 @@ public class Product {
     private int quantity;
     private String imageURL;
     private static List<Product> products = new ArrayList<>();
-
-
-    
-    /**
-     * Constructs a Product with the specified details.
-     *
-     * @param productID   The unique identifier for the product.
-     * @param name        The name of the product.
-     * @param price       The price of the product.
-     * @param quantity    The available quantity of the product.
-     * @param imageURL    The URL of the product's image.
-     * @param description The description of the product.
-     */
     public Product(int productID, String name, double price, int quantity, String imageURL, String description) {
         this.productID = productID;
         this.name = name;
@@ -38,22 +16,10 @@ public class Product {
         this.imageURL = imageURL;
         this.description = description;
     }
-   
-     /**
-     * Gets the product ID.
-     *
-     * @return The product ID.
-     */
+
     public int getProductID(){
         return productID;
     }
-
-    /**
-     * Retrieves a product by its ID.
-     *
-     * @param productID The ID of the product to retrieve.
-     * @return The Product if found, null otherwise.
-     */
     public static Product getProduct(int productID) {
         for (Product product : products) {
             if (product.getProductID() == productID) {
@@ -62,114 +28,66 @@ public class Product {
         }
         return null;
     }
-    
-    /**
-     * 
-     * @return price 
-     * 
-     */
+
     public double getPrice(){
         return price;
     }
-
-    /**
-     * 
-     * @return name
-     */
     public String getName(){
         return name;
     }
-
-    /**
-     * 
-     * @return description
-     */
     public String getDescription(){
         return description;
     }
-
-    /**
-     * 
-     * @return quantity
-     */
     public int getQuantity(){
         return quantity;
     }
-    
-    /**
-     * 
-     * @return getImageURL
-     */
+
     public String getImageURL(){
         return imageURL;
     }
-
-    /**
-     * 
-     * @param imageURL
-     */
     public void setImageURL(String imageURL) {this.imageURL = imageURL;}
-
-    /**
-     * 
-     * @param productID
-     */
     public void setProductID(int productID) {
         this.productID = productID;
     }
-
-    /**
-     * 
-     * @param name
-     */
     public void setName(String name) {
         this.name = name;
     }
-
-    /**
-     * 
-     * @param description
-     */
     public void setDescription(String description) {
         this.description = description;
     }
-
-    /**
-     * 
-     * @param price
-     */
     public void setPrice(double price) {
         this.price = price;
     }
-
-    /**
-     * 
-     * @param quantity
-     */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-
-    /**
-     * calls initializeProducts
-     */
+    public boolean isAvailable() {return quantity > 0;}
+    public String getProductDetails() {
+        StringBuilder details = new StringBuilder();
+        details.append("Name: ").append(name).append("\n");
+        details.append("Price: $").append(String.format("%.2f", price)).append("\n");
+        // Check and include other product details if available
+        if (description != null && !description.isEmpty()) {
+            details.append("Description: ").append(description).append("\n");
+        } else {
+            details.append("Description: Information not available\n");
+        }
+        if (imageURL != null && !imageURL.isEmpty()) {
+            details.append("Image URL: ").append(imageURL).append("\n");
+        } else {
+            details.append("Image URL: Information not available\n");
+        }
+        details.append("Quantity: ").append(quantity).append(" left in stock\n");
+        return details.toString();
+    }
     static {
         initializeProducts();
     }
-
-   /**
-     * Retrieves a copy of the list of products.
-     *
-     * @return A copy of the list of products.
-     */
     public static List<Product> getProducts() {
         return new ArrayList<>(products); // Return a copy to avoid modification of the original list
     }
-
-    // Pseudo-database of hard-coded products to use for our app
+    // Static method to create a list of products
     public static void initializeProducts() {
-
         products.add(new Product(101, "Laptop", 999.99, 10, "https://m.media-amazon.com/images/I/81zKcC5wJ6L._AC_UF1000,1000_QL80_.jpg", "A high-performance laptop."));
         products.add(new Product(102, "Smartphone", 499.99, 15, "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1692845702708", "An innovative smartphone with the best camera."));
         products.add(new Product(103, "DashCam", 99.99, 30, "https://m.media-amazon.com/images/I/61-ouW+YFlL.jpg", "A Dashcam for your car."));
@@ -191,30 +109,18 @@ public class Product {
         products.add(new Product(20, "Leather Wallet", 49.99, 45, "https://media.gucci.com/style/DarkGray_Center_0_0_490x490/1463502620/428726_DJ20T_1000_001_080_0000_Light.jpg", "Elegant leather wallet with RFID blocking."));
         products.add(new Product(22, "Noise-cancelling Earplugs", 25.99, 50, "https://m.media-amazon.com/images/I/615FjNyNApL.jpg", "Reusable earplugs with superior noise cancellation."));
     }
-
-
-    /**
-     * 
-     * @param product
-     */
     public static void addProduct(Product product) {
         products.add(product);
     }
-    
-  
-    /**
-     * Returns a string representation of the product.
-     *
-     * @return A string that contains the product details.
-     */
+
+
     @Override
     public String toString() {
-        return 
+        return
                 "productID: " + productID +
-                ", name: '" + name + '\'' +
-                ", description: '" + description + '\'' +
-                ", price: $" + price +
-                ", quantity: " + quantity ;
+                        ", name: '" + name + '\'' +
+                        ", description: '" + description + '\'' +
+                        ", price: $" + price +
+                        ", quantity: " + quantity ;
     }
-
 }

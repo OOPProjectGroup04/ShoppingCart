@@ -95,14 +95,17 @@ public class AddNewItem extends JFrame {
             int productId = Integer.parseInt(productIdField.getText());
             String productImageURL = productImageURLField.getText(); // Example image URL
             String productDescribe = productDescribeField.getText();
-
+            // Check for negative quantity and price
+            if (quantity < 0 || price < 0) {
+                JOptionPane.showMessageDialog(this, "Please enter non-negative values for quantity and price.");
+                return;  // Exit the method to prevent further processing
+            }
             // Check for duplicate product entry
             Product existingProduct = Product.getProduct(productId);
             if (existingProduct != null) {
                 int option = JOptionPane.showConfirmDialog(null,
                         "A product with the same ID already exists. Do you want to update the existing product?",
                         "Duplicate Product Entry", JOptionPane.YES_NO_OPTION);
-
                 if (option == JOptionPane.YES_OPTION) {
                     // Update the existing product
                     existingProduct.setName(productName);
@@ -114,16 +117,13 @@ public class AddNewItem extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(this, "Product not updated.");
                 }
-
             } else {
                 // No duplicate found, add the new product to inventory
                 Product.addProduct(new Product(productId, productName, price, quantity, productImageURL, productDescribe));
                 JOptionPane.showMessageDialog(this, "Product added successfully!");
             }
-
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for quantity, price, and product ID.");
         }
     }
-
 }

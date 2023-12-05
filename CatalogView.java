@@ -58,10 +58,6 @@ class CatalogView {
 
         shoppingCart = new ArrayList<>(); // Initialize the shopping cart list
         refreshCartDisplay();
-
-
-
-
     }
 
 
@@ -175,10 +171,14 @@ class CatalogView {
      */
     private void viewProductDetails(Product product) {
         // Implementation of product details view
-                refreshCartDisplay();
-
-        JOptionPane.showMessageDialog(frame, "Product Details:\n" + product);
+        if (product.isAvailable()) {
+            String productDetails = product.getProductDetails();
+            JOptionPane.showMessageDialog(frame, "Product Details:\n" + productDetails);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Product is out of stock or unavailable.");
+        }
     }
+
      /**
      * Displays the shopping cart view.
      */
